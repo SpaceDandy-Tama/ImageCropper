@@ -131,6 +131,11 @@ namespace ArdaCropper
             checkBoxRegistry.Check(RegisterInStartup(Settings.StartupViaRegistry));
             checkBoxStartMenu.Check(ShortcutInStartup(Settings.StartupViaStartMenu));
 
+#if !Windows
+            checkBoxRegistry.Enabled = false;
+            checkBoxStartMenu.Enabled = false;
+#endif
+
             //Start Mizimized
             Minimize();
             this.ShowInTaskbar = false;
@@ -233,6 +238,9 @@ namespace ArdaCropper
 
         private bool RegisterInStartup(bool isChecked)
         {
+#if !Windows
+            return false;
+#else
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (isChecked)
             {
@@ -246,10 +254,14 @@ namespace ArdaCropper
             }
 
             return isChecked;
+#endif
         }
 
         public bool ShortcutInStartup(bool isChecked)
         {
+#if !Windows
+            return false;
+#else
             string startupDir = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
             if (isChecked)
             {
@@ -271,6 +283,7 @@ namespace ArdaCropper
             }
 
             return isChecked;
+#endif
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
