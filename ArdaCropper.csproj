@@ -11,10 +11,12 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +27,7 @@
     <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,6 +41,22 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WinDebug|AnyCPU'">
+    <OutputPath>bin\WinDebug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Windows</DefineConstants>
+    <Prefer32Bit>true</Prefer32Bit>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Windows|AnyCPU'">
+    <OutputPath>bin\Windows\</OutputPath>
+    <Optimize>true</Optimize>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>Windows</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -103,6 +121,26 @@
   <ItemGroup>
     <Content Include="ArdaCropper.ico" />
     <None Include="blank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CairoSharp">
+      <Version>3.22.25.74</Version>
+    </PackageReference>
+    <PackageReference Include="GdkSharp">
+      <Version>3.22.25.74</Version>
+    </PackageReference>
+    <PackageReference Include="GioSharp">
+      <Version>3.22.25.74</Version>
+    </PackageReference>
+    <PackageReference Include="GLibSharp">
+      <Version>3.22.25.74</Version>
+    </PackageReference>
+    <PackageReference Include="GtkSharp">
+      <Version>3.22.25.74</Version>
+    </PackageReference>
+    <PackageReference Include="PangoSharp">
+      <Version>3.22.25.74</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

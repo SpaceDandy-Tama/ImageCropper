@@ -6,6 +6,9 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
+#if Windows
+using Microsoft.Win32;
+#endif
 
 namespace ArdaCropper
 {
@@ -66,7 +69,7 @@ namespace ArdaCropper
         public AppSetting Settings;
         public string shortcutPath;
 
-        public string AppSettingPath = "AppSetting.json";
+        public string AppSettingPath = "ArdaCropperSettings.json";
         public DataContractJsonSerializer Ser;
 
         public bool isCropping = false;
@@ -155,11 +158,13 @@ namespace ArdaCropper
         }
 
 #if !Windows
-        //Gdk.Pixbuf pixBufScreenshot;
+        Gdk.Pixbuf pixBufScreenshot;
 #endif
 
         public void GetScreenshot()
         {
+            isCropping = false;
+
             if (EndPoint.X < StartPoint.X)
             {
                 Point temp = EndPoint;
@@ -181,12 +186,6 @@ namespace ArdaCropper
             Size resolution = new Size(EndPoint.X - StartPoint.X, EndPoint.Y - StartPoint.Y);
 
             Bitmap bmpScreenshot = new Bitmap(resolution.Width, resolution.Height, PixelFormat.Format32bppArgb);
-#if !Windows
-            //MemoryStream myMemoryStream = new MemoryStream();
-            //bmpScreenshot.Save(myMemoryStream, ImageFormat.Bmp);
-            //myMemoryStream.Position = 0;
-            //pixBufScreenshot = new Gdk.Pixbuf(myMemoryStream);
-#endif
             Graphics gfxScreenshot = Graphics.FromImage(bmpScreenshot);
             gfxScreenshot.CopyFromScreen(StartPoint.X, StartPoint.Y, 0, 0, resolution, CopyPixelOperation.SourceCopy);
 
@@ -195,8 +194,13 @@ namespace ArdaCropper
 #if Windows
                 Clipboard.SetImage(bmpScreenshot);
 #else
-                //Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
-                //clipboard.Image = pixBufScreenshot;
+                MemoryStream myMemoryStream = new MemoryStream();
+                bmpScreenshot.Save(myMemoryStream, ImageFormat.Bmp);
+                myMemoryStream.Position = 0;
+                pixBufScreenshot = new Gdk.Pixbuf(myMemoryStream);
+
+                Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
+                clipboard.Image = pixBufScreenshot;
 #endif
             }
 
@@ -308,10 +312,8 @@ namespace ArdaCropper
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left)
+            if (isCropping || e.Button != MouseButtons.Left)
                 return;
-
-            //GetScreenshot();
 
             isCropping = true;
 
