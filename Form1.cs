@@ -106,13 +106,13 @@ namespace ArdaCropper
 
             notifyIcon1.ContextMenu = contextMenu1;
 
-            shortcutPath = Application.StartupPath + "\\ArdaCropper.lnk";
+            shortcutPath = Path.Combine(Application.StartupPath, "ArdaCropper.lnk");
 
             comboBoxSaveDir.Items.Add("MyPictures");
             comboBoxSaveDir.Items.Add("Desktop");
             //comboBoxSaveDir.Items.Add("Custom");
 
-            AppSettingPath = Application.StartupPath + "\\" + AppSettingPath;
+            AppSettingPath = Path.Combine(Application.StartupPath, AppSettingPath);
 
             if (!LoadAppSetting())
             {
@@ -134,6 +134,7 @@ namespace ArdaCropper
 #if !Windows
             checkBoxRegistry.Enabled = false;
             checkBoxStartMenu.Enabled = false;
+            this.Height = 200;
 #endif
 
             //Start Mizimized
@@ -206,11 +207,12 @@ namespace ArdaCropper
                 string[] files = Directory.GetFiles(saveDir);
                 foreach(string file in files)
                 {
-                    string[] temp = file.Split('\\');
-                    if (temp[temp.Length - 1].StartsWith(fileName, StringComparison.Ordinal))
+                    string temp = Path.GetFileName(file);
+                    if (temp.StartsWith(fileName, StringComparison.Ordinal))
                         count++;
                 }
-                saveDir += "\\" + fileName + count;
+
+                saveDir = Path.Combine(saveDir, fileName + count.ToString());
 
                 ImageFormat imageFormat;
                 if (Settings.SaveFormatIndex == 0)
@@ -228,6 +230,13 @@ namespace ArdaCropper
                     imageFormat = ImageFormat.Jpeg;
                     saveDir += ".jpg";
                 }
+
+#if DEBUG
+                using (StreamWriter sw = new StreamWriter("log.log"))
+                {
+                    sw.WriteLine(saveDir);
+                }
+#endif
 
                 bmpScreenshot.Save(saveDir, imageFormat);
             }
