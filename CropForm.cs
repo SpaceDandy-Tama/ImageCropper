@@ -122,15 +122,19 @@ namespace ArdaCropper
             this.Height = screen != null ? screen.Bounds.Height : 20000;
             this.Location = screen != null ? screen.Bounds.Location : new Point(-10000, -10000);
 
+            //This event does not work in linux
+#if Windows
             if (StartDrawing && EndDrawing)
             {
                 this.DisposeAll();
                 MainForm.GetScreenshot();
             }
+#endif
         }
 
         private void HideAll()
         {
+
             if (MainForm.CropForms.Count == 0)
                 this.Hide();
             else
@@ -138,6 +142,15 @@ namespace ArdaCropper
                 foreach (CropForm cropForm in MainForm.CropForms)
                     cropForm?.Hide();
             }
+
+            //Todo: test if this works on windows
+#if !Windows
+            if (StartDrawing && EndDrawing)
+            {
+                this.DisposeAll();
+                MainForm.GetScreenshot();
+            }
+#endif
         }
 
         private void DisposeAll()
