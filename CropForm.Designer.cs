@@ -1,4 +1,7 @@
-﻿namespace ArdaCropper
+﻿using System;
+using System.Windows.Forms;
+
+namespace ArdaCropper
 {
     partial class CropForm
     {

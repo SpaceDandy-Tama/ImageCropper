@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace ArdaCropper
 {
@@ -160,6 +154,10 @@ namespace ArdaCropper
             this.ShowInTaskbar = true;
         }
 
+#if !Windows
+        //Gdk.Pixbuf pixBufScreenshot;
+#endif
+
         public void GetScreenshot()
         {
             if (EndPoint.X < StartPoint.X)
@@ -183,11 +181,24 @@ namespace ArdaCropper
             Size resolution = new Size(EndPoint.X - StartPoint.X, EndPoint.Y - StartPoint.Y);
 
             Bitmap bmpScreenshot = new Bitmap(resolution.Width, resolution.Height, PixelFormat.Format32bppArgb);
+#if !Windows
+            //MemoryStream myMemoryStream = new MemoryStream();
+            //bmpScreenshot.Save(myMemoryStream, ImageFormat.Bmp);
+            //myMemoryStream.Position = 0;
+            //pixBufScreenshot = new Gdk.Pixbuf(myMemoryStream);
+#endif
             Graphics gfxScreenshot = Graphics.FromImage(bmpScreenshot);
             gfxScreenshot.CopyFromScreen(StartPoint.X, StartPoint.Y, 0, 0, resolution, CopyPixelOperation.SourceCopy);
 
-            if(Settings.CopyToClipboard)
+            if (Settings.CopyToClipboard)
+            {
+#if Windows
                 Clipboard.SetImage(bmpScreenshot);
+#else
+                //Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
+                //clipboard.Image = pixBufScreenshot;
+#endif
+            }
 
             if (Settings.SaveToDisk)
             {
@@ -231,12 +242,12 @@ namespace ArdaCropper
                     saveDir += ".jpg";
                 }
 
-#if DEBUG
-                using (StreamWriter sw = new StreamWriter("log.log"))
-                {
-                    sw.WriteLine(saveDir);
-                }
-#endif
+//#if DEBUG
+//                using (StreamWriter sw = new StreamWriter("log.log"))
+//                {
+//                    sw.WriteLine(saveDir);
+//                }
+//#endif
 
                 bmpScreenshot.Save(saveDir, imageFormat);
             }

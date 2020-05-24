@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -116,13 +117,13 @@ namespace ArdaCropper
             }
         }
 
+        //This event only works when form is shown in linux
         private void CropForm_VisibleChanged(object sender, EventArgs e)
         {
             this.Width = screen != null ? screen.Bounds.Width : 20000;
             this.Height = screen != null ? screen.Bounds.Height : 20000;
             this.Location = screen != null ? screen.Bounds.Location : new Point(-10000, -10000);
 
-            //This event does not work in linux
 #if Windows
             if (StartDrawing && EndDrawing)
             {
@@ -134,24 +135,43 @@ namespace ArdaCropper
 
         private void HideAll()
         {
-
             if (MainForm.CropForms.Count == 0)
+            {
                 this.Hide();
+#if !Windows
+                this.TriggerScreenshot();
+#endif
+            }
             else
             {
                 foreach (CropForm cropForm in MainForm.CropForms)
-                    cropForm?.Hide();
-            }
-
-            //Todo: test if this works on windows
+                {
+                    if (cropForm != null)
+                    {
+                        cropForm.Hide();
 #if !Windows
+                        cropForm.TriggerScreenshot();
+#endif
+                    }
+                }
+            }
+        }
+
+#if !Windows
+        private async void TriggerScreenshot()
+        {
+            if (!StartDrawing || !EndDrawing)
+                return;
+            
+            await Task.Delay(500);
+
             if (StartDrawing && EndDrawing)
             {
                 this.DisposeAll();
                 MainForm.GetScreenshot();
             }
-#endif
         }
+#endif
 
         private void DisposeAll()
         {
