@@ -135,8 +135,14 @@ namespace ArdaCropper
 #endif
 
             //Start Mizimized
+            DelayedMinimize(); //Fixed setting window not being minimized upon startup
+        }
+
+        public async void DelayedMinimize()
+		{
+            await System.Threading.Tasks.Task.Delay(1);
             Minimize();
-            this.ShowInTaskbar = false;
+            this.ShowInTaskbar = true;
             notifyIcon1.ShowBalloonTip(2000);
         }
 
