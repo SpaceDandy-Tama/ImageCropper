@@ -32,15 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.1.0")]
-[assembly: AssemblyFileVersion("1.3.1.0")]
-
-//Version 1.0///////////////////////////////////////////////////////////////////
-//Initial Release
-//Version 1.1///////////////////////////////////////////////////////////////////
-//FIXED Windows 10 startup issue
-//FIXED mouse selection area
-//ADDED Multi-monitor support.
-//Version 1.2///////////////////////////////////////////////////////////////////
-//FIXED Window Focus Issues after double clicking the tray icon
-//FIXED a minor bug that activated the app when right clicking the app (worn-out right mouse button that resulted in unintentional double click was the issue)
+[assembly: AssemblyVersion("1.3.2.0")]
+[assembly: AssemblyFileVersion("1.3.2.0")]

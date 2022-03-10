@@ -109,7 +109,12 @@ namespace ArdaCropper
             comboBoxSaveDir.Items.Add("Desktop");
             //comboBoxSaveDir.Items.Add("Custom");
 
-            AppSettingPath = Path.Combine(Application.StartupPath, AppSettingPath);
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string fileName = AppSettingPath;
+            AppSettingPath = Path.Combine(appDataPath, "ArdaSuite");
+            if (!Directory.Exists(AppSettingPath))
+                Directory.CreateDirectory(AppSettingPath);
+            AppSettingPath = Path.Combine(AppSettingPath, fileName);
 
             if (!LoadAppSetting())
             {
