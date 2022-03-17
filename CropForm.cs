@@ -172,7 +172,7 @@ namespace ArdaCropper
             if (StartDrawing && EndDrawing)
             {
                 this.DisposeAll();
-                MainForm.GetScreenshot();
+                MainForm.GetScreenshot(ToClipboard);
             }
         }
 #endif

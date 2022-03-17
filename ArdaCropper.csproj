@@ -87,7 +87,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeyboardHook\KeyboardHook.cs" />
+    <Compile Include="KeyboardHook\HotkeyListener.cs" />
     <Compile Include="KeyboardHook\KeyPressedEventArgs.cs" />
     <Compile Include="KeyboardHook\ModifierKeys.cs" />
     <Compile Include="KeyboardHook\Window.cs" />

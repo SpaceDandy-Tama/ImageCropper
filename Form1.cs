@@ -421,9 +421,11 @@ namespace ArdaCropper
 
             Minimize();
 
+#if Windows
             DisableHotkeys();
             if (Settings.EnableHotkeys)
                 EnableHotkeys();
+#endif
         }
 
         private void checkBoxRegistry_Click(object sender, EventArgs e)

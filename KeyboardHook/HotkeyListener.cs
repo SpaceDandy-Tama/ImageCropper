@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if Windows
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -36,7 +37,7 @@ namespace ArdaCropper.KeyboardHook
                 _window.KeyPressedClipboard += callback;
         }
 
-        #region IDisposable Members
+#region IDisposable Members
 
         private bool _disposed;
         public void Dispose()
@@ -56,6 +57,7 @@ namespace ArdaCropper.KeyboardHook
             _disposed = true;
         }
 
-        #endregion
+#endregion
     }
 }
+#endif

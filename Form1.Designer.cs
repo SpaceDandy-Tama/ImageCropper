@@ -139,9 +139,9 @@
             this.checkBoxHotkey.AutoSize = true;
             this.checkBoxHotkey.Location = new System.Drawing.Point(13, 84);
             this.checkBoxHotkey.Name = "checkBoxHotkey";
-            this.checkBoxHotkey.Size = new System.Drawing.Size(178, 17);
+            this.checkBoxHotkey.Size = new System.Drawing.Size(101, 17);
             this.checkBoxHotkey.TabIndex = 4;
-            this.checkBoxHotkey.Text = "Enable Hotkeys (Windows Only)";
+            this.checkBoxHotkey.Text = "Enable Hotkeys";
             this.checkBoxHotkey.UseVisualStyleBackColor = true;
             // 
             // Form1
