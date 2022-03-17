@@ -8,12 +8,16 @@ using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
 #if Windows
 using Microsoft.Win32;
+using ArdaCropper.KeyboardHook;
 #endif
 
 namespace ArdaCropper
 {
     public partial class Form1 : Form
     {
+#if Windows
+        private HotkeyListener Hook;
+#endif
 
         private ContextMenu contextMenu1;
         private MenuItem menuItemExit;
@@ -38,6 +42,8 @@ namespace ArdaCropper
             public bool StartupViaRegistry = false;
             [DataMember]
             public bool StartupViaStartMenu = false;
+            [DataMember]
+            public bool EnableHotkeys = true;
         }
 
         private void SaveAppSetting()
@@ -56,10 +62,18 @@ namespace ArdaCropper
             Ser = new DataContractJsonSerializer(typeof(AppSetting));
             if (File.Exists(AppSettingPath))
             {
-                using (FileStream fileStream = File.OpenRead(AppSettingPath))
+                try
                 {
-                    Settings = (AppSetting)Ser.ReadObject(fileStream);
-                    return true;
+                    using (FileStream fileStream = File.OpenRead(AppSettingPath))
+                    {
+                        Settings = (AppSetting)Ser.ReadObject(fileStream);
+
+                        return true;
+                    }
+                }
+                catch
+                {
+                    File.Delete(AppSettingPath);
                 }
             }
             return false;
@@ -130,18 +144,58 @@ namespace ArdaCropper
             checkBoxSave.Check(Settings.SaveToDisk);
             comboBoxSaveDir.SelectedIndex = Settings.SaveDirIndex;
             comboBoxFormat.SelectedIndex = Settings.SaveFormatIndex;
+            checkBoxHotkey.Check(Settings.EnableHotkeys);
             checkBoxRegistry.Check(RegisterInStartup(Settings.StartupViaRegistry));
             checkBoxStartMenu.Check(ShortcutInStartup(Settings.StartupViaStartMenu));
 
 #if !Windows
             checkBoxRegistry.Enabled = false;
             checkBoxStartMenu.Enabled = false;
+            checkBoxHotkey.Enabled = false;
             this.Height = 200;
 #endif
 
             //Start Mizimized
             DelayedMinimize(); //Fixed setting window not being minimized upon startup
+
+#if Windows
+            if (Settings.EnableHotkeys)
+            {
+                EnableHotkeys();
+            }
+#endif
         }
+
+#if Windows
+        private void EnableHotkeys()
+        {
+            DisableHotkeys();
+
+            Hook = new HotkeyListener();
+            Hook.RegisterHotKey(KeyboardHook.ModifierKeys.Shift, Keys.PrintScreen, Hook_KeyPressed);
+            Hook.RegisterHotKey(KeyboardHook.ModifierKeys.Control | KeyboardHook.ModifierKeys.Shift, Keys.PrintScreen, Hook_KeyPressedClipboard);
+        }
+        private void DisableHotkeys()
+        {
+            Hook?.Dispose();
+            Hook = null;
+        }
+
+        private void Hook_KeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            if (isCropping)
+                return;
+
+            StartCropping(false);
+        }
+        private void Hook_KeyPressedClipboard(object sender, KeyPressedEventArgs e)
+        {
+            if (isCropping)
+                return;
+
+            StartCropping(true);
+        }
+#endif
 
         public async void DelayedMinimize()
 		{
@@ -172,7 +226,7 @@ namespace ArdaCropper
         Gdk.Pixbuf pixBufScreenshot;
 #endif
 
-        public void GetScreenshot()
+        public void GetScreenshot(bool toClipboard)
         {
             isCropping = false;
 
@@ -200,7 +254,7 @@ namespace ArdaCropper
             Graphics gfxScreenshot = Graphics.FromImage(bmpScreenshot);
             gfxScreenshot.CopyFromScreen(StartPoint.X, StartPoint.Y, 0, 0, resolution, CopyPixelOperation.SourceCopy);
 
-            if (Settings.CopyToClipboard)
+            if (toClipboard)
             {
 #if Windows
                 Clipboard.SetImage(bmpScreenshot);
@@ -214,8 +268,7 @@ namespace ArdaCropper
                 clipboard.Image = pixBufScreenshot;
 #endif
             }
-
-            if (Settings.SaveToDisk)
+            else
             {
                 string saveDir = "";
                 if (Settings.SaveDirIndex == 0)
@@ -326,17 +379,21 @@ namespace ArdaCropper
             if (isCropping || e.Button != MouseButtons.Left)
                 return;
 
+            StartCropping(Settings.CopyToClipboard);
+
+        }
+		private void StartCropping(bool toClipboard)
+		{
             isCropping = true;
 
             CropForms.Clear();
 
             foreach (Screen screen in Screen.AllScreens)
             {
-                CropForm tempCropForm = new CropForm(this, screen);
+                CropForm tempCropForm = new CropForm(this, toClipboard, screen);
                 tempCropForm.Show();
                 CropForms.Add(tempCropForm);
             }
-
         }
 
         private void menuItemSettings_Click(object sender, EventArgs e)
@@ -356,12 +413,17 @@ namespace ArdaCropper
             Settings.SaveDirIndex = comboBoxSaveDir.SelectedIndex;
             Settings.SaveDirCustom = "none";
             Settings.SaveFormatIndex = comboBoxFormat.SelectedIndex;
+            Settings.EnableHotkeys = checkBoxHotkey.Checked;
             Settings.StartupViaRegistry = RegisterInStartup(checkBoxRegistry.Checked);
             Settings.StartupViaStartMenu = ShortcutInStartup(checkBoxStartMenu.Checked);
 
             SaveAppSetting();
 
             Minimize();
+
+            DisableHotkeys();
+            if (Settings.EnableHotkeys)
+                EnableHotkeys();
         }
 
         private void checkBoxRegistry_Click(object sender, EventArgs e)

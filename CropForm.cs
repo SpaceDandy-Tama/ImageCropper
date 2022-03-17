@@ -21,11 +21,15 @@ namespace ArdaCropper
 
         private Point StartDrawingPoint;
 
-        public CropForm(Form1 mainForm, Screen screen = null)
+        public bool ToClipboard = true;
+
+        public CropForm(Form1 mainForm, bool toClipboard, Screen screen = null)
         {
             InitializeComponent();
 
             MainForm = mainForm;
+            ToClipboard = toClipboard;
+
             if(screen != null)
                 this.screen = screen;
             this.Icon = MainForm.Icon;
@@ -128,7 +132,7 @@ namespace ArdaCropper
             if (StartDrawing && EndDrawing)
             {
                 this.DisposeAll();
-                MainForm.GetScreenshot();
+                MainForm.GetScreenshot(ToClipboard);
             }
 #endif
         }

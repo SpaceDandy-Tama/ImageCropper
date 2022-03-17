@@ -39,11 +39,12 @@
             this.checkBoxStartMenu = new System.Windows.Forms.CheckBox();
             this.comboBoxFormat = new System.Windows.Forms.ComboBox();
             this.labelFormat = new System.Windows.Forms.Label();
+            this.checkBoxHotkey = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonDone
             // 
-            this.buttonDone.Location = new System.Drawing.Point(13, 128);
+            this.buttonDone.Location = new System.Drawing.Point(13, 153);
             this.buttonDone.Name = "buttonDone";
             this.buttonDone.Size = new System.Drawing.Size(190, 23);
             this.buttonDone.TabIndex = 0;
@@ -93,7 +94,7 @@
             // checkBoxRegistry
             // 
             this.checkBoxRegistry.AutoSize = true;
-            this.checkBoxRegistry.Location = new System.Drawing.Point(13, 82);
+            this.checkBoxRegistry.Location = new System.Drawing.Point(13, 107);
             this.checkBoxRegistry.Name = "checkBoxRegistry";
             this.checkBoxRegistry.Size = new System.Drawing.Size(118, 17);
             this.checkBoxRegistry.TabIndex = 1;
@@ -104,7 +105,7 @@
             // checkBoxStartMenu
             // 
             this.checkBoxStartMenu.AutoSize = true;
-            this.checkBoxStartMenu.Location = new System.Drawing.Point(13, 105);
+            this.checkBoxStartMenu.Location = new System.Drawing.Point(13, 130);
             this.checkBoxStartMenu.Name = "checkBoxStartMenu";
             this.checkBoxStartMenu.Size = new System.Drawing.Size(132, 17);
             this.checkBoxStartMenu.TabIndex = 1;
@@ -133,12 +134,23 @@
             this.labelFormat.TabIndex = 3;
             this.labelFormat.Text = "Save Format:";
             // 
+            // checkBoxHotkey
+            // 
+            this.checkBoxHotkey.AutoSize = true;
+            this.checkBoxHotkey.Location = new System.Drawing.Point(13, 84);
+            this.checkBoxHotkey.Name = "checkBoxHotkey";
+            this.checkBoxHotkey.Size = new System.Drawing.Size(178, 17);
+            this.checkBoxHotkey.TabIndex = 4;
+            this.checkBoxHotkey.Text = "Enable Hotkeys (Windows Only)";
+            this.checkBoxHotkey.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(215, 162);
+            this.ClientSize = new System.Drawing.Size(215, 185);
             this.ControlBox = false;
+            this.Controls.Add(this.checkBoxHotkey);
             this.Controls.Add(this.labelFormat);
             this.Controls.Add(this.comboBoxFormat);
             this.Controls.Add(this.comboBoxSaveDir);
@@ -169,6 +181,7 @@
         private System.Windows.Forms.CheckBox checkBoxStartMenu;
         private System.Windows.Forms.ComboBox comboBoxFormat;
         private System.Windows.Forms.Label labelFormat;
+        private System.Windows.Forms.CheckBox checkBoxHotkey;
     }
 }
 

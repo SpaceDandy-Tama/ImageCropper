@@ -71,6 +71,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckBoxExtensions.cs" />
@@ -86,6 +87,10 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyboardHook\KeyboardHook.cs" />
+    <Compile Include="KeyboardHook\KeyPressedEventArgs.cs" />
+    <Compile Include="KeyboardHook\ModifierKeys.cs" />
+    <Compile Include="KeyboardHook\Window.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CropForm.resx">
