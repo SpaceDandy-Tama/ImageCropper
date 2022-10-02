@@ -1,3 +1,7 @@
+**1.5:**
+
+-	Renamed to ImageCropper
+
 **1.4:**
 
 -	gnome-screenshot like hotkeys added for windows platform (CTRL+SHIFT+PRTSCR | SHIFT+PRTSCR) (Overrides clipboard and save settings)

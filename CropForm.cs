@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ArdaCropper
+namespace ImageCropper
 {
     public partial class CropForm : Form
     {
@@ -128,13 +128,11 @@ namespace ArdaCropper
             this.Height = screen != null ? screen.Bounds.Height : 20000;
             this.Location = screen != null ? screen.Bounds.Location : new Point(-10000, -10000);
 
-#if Windows
             if (StartDrawing && EndDrawing)
             {
                 this.DisposeAll();
                 MainForm.GetScreenshot(ToClipboard);
             }
-#endif
         }
 
         private void HideAll()
@@ -142,9 +140,6 @@ namespace ArdaCropper
             if (MainForm.CropForms.Count == 0)
             {
                 this.Hide();
-#if !Windows
-                this.TriggerScreenshot();
-#endif
             }
             else
             {
@@ -153,29 +148,10 @@ namespace ArdaCropper
                     if (cropForm != null)
                     {
                         cropForm.Hide();
-#if !Windows
-                        cropForm.TriggerScreenshot();
-#endif
                     }
                 }
             }
         }
-
-#if !Windows
-        private async void TriggerScreenshot()
-        {
-            if (!StartDrawing || !EndDrawing)
-                return;
-            
-            await Task.Delay(500);
-
-            if (StartDrawing && EndDrawing)
-            {
-                this.DisposeAll();
-                MainForm.GetScreenshot(ToClipboard);
-            }
-        }
-#endif
 
         private void DisposeAll()
         {

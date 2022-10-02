@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ArdaCropper.KeyboardHook
+namespace ImageCropper.KeyboardHook
 {
     /// <summary>
     /// Represents the window that is used internally to get the messages.

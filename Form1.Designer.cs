@@ -1,4 +1,4 @@
-﻿namespace ArdaCropper
+﻿namespace ImageCropper
 {
     partial class Form1
     {
@@ -58,7 +58,7 @@
             this.notifyIcon1.BalloonTipText = "Double click this icon to capture and crop part of your screen into your clipboar" +
     "d.";
             this.notifyIcon1.BalloonTipTitle = "Proper Cropper Mate";
-            this.notifyIcon1.Text = "ArdaCropper";
+            this.notifyIcon1.Text = "ImageCropper";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
@@ -164,7 +164,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form1";
-            this.Text = "ArdaCropper Settings";
+            this.Text = "ImageCropper Settings";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,9 +1,8 @@
-﻿#if Windows
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace ArdaCropper.KeyboardHook
+namespace ImageCropper.KeyboardHook
 {
 	public class HotkeyListener : IDisposable
     {
@@ -60,4 +59,3 @@ namespace ArdaCropper.KeyboardHook
 #endregion
     }
 }
-#endif

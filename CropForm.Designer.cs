@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ArdaCropper
+namespace ImageCropper
 {
     partial class CropForm
     {
@@ -31,6 +31,7 @@ namespace ArdaCropper
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CropForm));
             this.labelResolution = new System.Windows.Forms.Label();
             this.pictureBoxArea = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxArea)).BeginInit();
@@ -65,8 +66,9 @@ namespace ArdaCropper
             this.Controls.Add(this.pictureBoxArea);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CropForm";
-            this.Text = "ArdaCropper";
+            this.Text = "ImageCropper";
             this.VisibleChanged += new System.EventHandler(this.CropForm_VisibleChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CropForm_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CropForm_MouseDown);

@@ -1,4 +1,4 @@
-﻿namespace ArdaCropper.KeyboardHook
+﻿namespace ImageCropper.KeyboardHook
 {
     /// <summary>
     /// The enumeration of possible modifiers.

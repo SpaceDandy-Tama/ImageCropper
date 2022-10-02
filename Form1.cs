@@ -6,18 +6,14 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
-#if Windows
 using Microsoft.Win32;
-using ArdaCropper.KeyboardHook;
-#endif
+using ImageCropper.KeyboardHook;
 
-namespace ArdaCropper
+namespace ImageCropper
 {
     public partial class Form1 : Form
     {
-#if Windows
         private HotkeyListener Hook;
-#endif
 
         private ContextMenu contextMenu1;
         private MenuItem menuItemExit;
@@ -83,7 +79,7 @@ namespace ArdaCropper
         public AppSetting Settings;
         public string shortcutPath;
 
-        public string AppSettingPath = "ArdaCropperSettings.json";
+        public string AppSettingPath = "ImageCropperSettings.json";
         public DataContractJsonSerializer Ser;
 
         public bool isCropping = false;
@@ -117,7 +113,7 @@ namespace ArdaCropper
 
             notifyIcon1.ContextMenu = contextMenu1;
 
-            shortcutPath = Path.Combine(Application.StartupPath, "ArdaCropper.lnk");
+            shortcutPath = Path.Combine(Application.StartupPath, "ImageCropper.lnk");
 
             comboBoxSaveDir.Items.Add("MyPictures");
             comboBoxSaveDir.Items.Add("Desktop");
@@ -125,7 +121,7 @@ namespace ArdaCropper
 
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string fileName = AppSettingPath;
-            AppSettingPath = Path.Combine(appDataPath, "ArdaSuite");
+            AppSettingPath = Path.Combine(appDataPath, "ImageCropper");
             if (!Directory.Exists(AppSettingPath))
                 Directory.CreateDirectory(AppSettingPath);
             AppSettingPath = Path.Combine(AppSettingPath, fileName);
@@ -148,25 +144,15 @@ namespace ArdaCropper
             checkBoxRegistry.Check(RegisterInStartup(Settings.StartupViaRegistry));
             checkBoxStartMenu.Check(ShortcutInStartup(Settings.StartupViaStartMenu));
 
-#if !Windows
-            checkBoxRegistry.Enabled = false;
-            checkBoxStartMenu.Enabled = false;
-            checkBoxHotkey.Enabled = false;
-            this.Height = 200;
-#endif
-
             //Start Mizimized
             DelayedMinimize(); //Fixed setting window not being minimized upon startup
 
-#if Windows
             if (Settings.EnableHotkeys)
             {
                 EnableHotkeys();
             }
-#endif
         }
 
-#if Windows
         private void EnableHotkeys()
         {
             DisableHotkeys();
@@ -195,7 +181,6 @@ namespace ArdaCropper
 
             StartCropping(true);
         }
-#endif
 
         public async void DelayedMinimize()
 		{
@@ -221,10 +206,6 @@ namespace ArdaCropper
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
         }
-
-#if !Windows
-        Gdk.Pixbuf pixBufScreenshot;
-#endif
 
         public void GetScreenshot(bool toClipboard)
         {
@@ -256,17 +237,7 @@ namespace ArdaCropper
 
             if (toClipboard)
             {
-#if Windows
                 Clipboard.SetImage(bmpScreenshot);
-#else
-                MemoryStream myMemoryStream = new MemoryStream();
-                bmpScreenshot.Save(myMemoryStream, ImageFormat.Bmp);
-                myMemoryStream.Position = 0;
-                pixBufScreenshot = new Gdk.Pixbuf(myMemoryStream);
-
-                Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
-                clipboard.Image = pixBufScreenshot;
-#endif
             }
             else
             {
@@ -326,35 +297,28 @@ namespace ArdaCropper
 
         private bool RegisterInStartup(bool isChecked)
         {
-#if !Windows
-            return false;
-#else
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (isChecked)
             {
-                if(registryKey.GetValue("ArdaCropper") == null)
-                    registryKey.SetValue("ArdaCropper", Application.ExecutablePath);
+                if(registryKey.GetValue("ImageCropper") == null)
+                    registryKey.SetValue("ImageCropper", Application.ExecutablePath);
             }
             else
             {
-                if (registryKey.GetValue("ArdaCropper") != null)
-                    registryKey.DeleteValue("ArdaCropper");
+                if (registryKey.GetValue("ImageCropper") != null)
+                    registryKey.DeleteValue("ImageCropper");
             }
 
             return isChecked;
-#endif
         }
 
         public bool ShortcutInStartup(bool isChecked)
         {
-#if !Windows
-            return false;
-#else
             string startupDir = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
             if (isChecked)
             {
                 //if(!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\ArdaCropper.lnk"))
-                    File.Copy(shortcutPath, Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\ArdaCropper.lnk", true);
+                    File.Copy(shortcutPath, Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\ImageCropper.lnk", true);
             }
             else
             {
@@ -362,7 +326,7 @@ namespace ArdaCropper
                 foreach (string fileName in filesUnderStartup)
                 {
                     string[] temp = fileName.Split('\\');
-                    if (temp[temp.Length-1].StartsWith("ArdaCropper", StringComparison.Ordinal))
+                    if (temp[temp.Length-1].StartsWith("ImageCropper", StringComparison.Ordinal))
                     {
                         File.Delete(fileName);
                         break;
@@ -371,7 +335,6 @@ namespace ArdaCropper
             }
 
             return isChecked;
-#endif
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -421,11 +384,9 @@ namespace ArdaCropper
 
             Minimize();
 
-#if Windows
             DisableHotkeys();
             if (Settings.EnableHotkeys)
                 EnableHotkeys();
-#endif
         }
 
         private void checkBoxRegistry_Click(object sender, EventArgs e)
