@@ -1,5 +1,10 @@
 # Changelog
 
+### **v1.6.1**
+- Changed Icon
+
+---
+
 ### **v1.6**
 - Fixed issue where **Save to Disk** didn't work if **To Clipboard** was enabled.
 - Removed `Shift+PrtScr` hotkey.
