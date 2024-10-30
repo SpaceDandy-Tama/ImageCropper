@@ -23,12 +23,12 @@ namespace ImageCropper
 
         public bool ToClipboard = true;
 
-        public CropForm(Form1 mainForm, bool toClipboard, Screen screen = null)
+        public CropForm(Form1 mainForm, Screen screen = null)
         {
             InitializeComponent();
 
             MainForm = mainForm;
-            ToClipboard = toClipboard;
+            ToClipboard = MainForm.Settings.CopyToClipboard;
 
             if(screen != null)
                 this.screen = screen;

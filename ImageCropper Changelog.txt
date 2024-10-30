@@ -1,3 +1,8 @@
+**1.6**
+
+-	Fixed a bug that casued save to disk not working while clipboard is active and removed redundant hotkeys. 
+	Now CTRL+SHIFt+PTSCRN copies or saves or bot according to your app setting
+
 **1.5:**
 
 -	Renamed to ImageCropper

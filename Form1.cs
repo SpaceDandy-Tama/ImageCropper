@@ -158,8 +158,7 @@ namespace ImageCropper
             DisableHotkeys();
 
             Hook = new HotkeyListener();
-            Hook.RegisterHotKey(KeyboardHook.ModifierKeys.Shift, Keys.PrintScreen, Hook_KeyPressed);
-            Hook.RegisterHotKey(KeyboardHook.ModifierKeys.Control | KeyboardHook.ModifierKeys.Shift, Keys.PrintScreen, Hook_KeyPressedClipboard);
+            Hook.RegisterHotKey(KeyboardHook.ModifierKeys.Control | KeyboardHook.ModifierKeys.Shift, Keys.PrintScreen, Hook_KeyPressed);
         }
         private void DisableHotkeys()
         {
@@ -172,14 +171,7 @@ namespace ImageCropper
             if (isCropping)
                 return;
 
-            StartCropping(false);
-        }
-        private void Hook_KeyPressedClipboard(object sender, KeyPressedEventArgs e)
-        {
-            if (isCropping)
-                return;
-
-            StartCropping(true);
+            StartCropping();
         }
 
         public async void DelayedMinimize()
@@ -238,8 +230,10 @@ namespace ImageCropper
             if (toClipboard)
             {
                 Clipboard.SetImage(bmpScreenshot);
+
             }
-            else
+
+            if (Settings.SaveToDisk)
             {
                 string saveDir = "";
                 if (Settings.SaveDirIndex == 0)
@@ -342,10 +336,10 @@ namespace ImageCropper
             if (isCropping || e.Button != MouseButtons.Left)
                 return;
 
-            StartCropping(Settings.CopyToClipboard);
+            StartCropping();
 
         }
-		private void StartCropping(bool toClipboard)
+		private void StartCropping()
 		{
             isCropping = true;
 
@@ -353,7 +347,7 @@ namespace ImageCropper
 
             foreach (Screen screen in Screen.AllScreens)
             {
-                CropForm tempCropForm = new CropForm(this, toClipboard, screen);
+                CropForm tempCropForm = new CropForm(this, screen);
                 tempCropForm.Show();
                 CropForms.Add(tempCropForm);
             }
