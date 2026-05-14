@@ -1,5 +1,11 @@
 # Changelog
 
+### **v1.6.2**
+- Fixed "Startup via Start Menu" related bug that caused the application to crash at launch
+- Changed EnableHotkeys option default to false
+
+---
+
 ### **v1.6.1**
 - Changed Icon
 

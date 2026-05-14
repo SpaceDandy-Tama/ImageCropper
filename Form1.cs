@@ -8,6 +8,8 @@ using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using ImageCropper.KeyboardHook;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace ImageCropper
 {
@@ -39,7 +41,7 @@ namespace ImageCropper
             [DataMember]
             public bool StartupViaStartMenu = false;
             [DataMember]
-            public bool EnableHotkeys = true;
+            public bool EnableHotkeys = false;
         }
 
         private void SaveAppSetting()
@@ -129,10 +131,20 @@ namespace ImageCropper
             if (!LoadAppSetting())
             {
                 Settings = new AppSetting();
-                if (Environment.OSVersion.Version.ToString().StartsWith("10"))
+
+                Version winVersion = Environment.OSVersion.Version;
+
+                if (winVersion > new Version(6, 1))
+                {
                     Settings.StartupViaRegistry = true;
+                    //Settings.EnableHotkeys = true;
+                }
                 else
+                {
                     Settings.StartupViaStartMenu = true;
+                    //Settings.EnableHotkeys = false;
+                }
+
                 SaveAppSetting();
             }
 
@@ -311,8 +323,11 @@ namespace ImageCropper
             string startupDir = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
             if (isChecked)
             {
-                //if(!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\ArdaCropper.lnk"))
-                    File.Copy(shortcutPath, Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\ImageCropper.lnk", true);
+                string shortcutPath = Path.Combine(startupDir, "ImageCropper.lnk");
+                string targetPath = Application.ExecutablePath;
+                string workingDir = Path.GetDirectoryName(targetPath);
+                string description = "A Screenshot Utility";
+                CreateShortcut(shortcutPath, targetPath, Path.GetDirectoryName(targetPath), description, null);
             }
             else
             {
@@ -330,6 +345,31 @@ namespace ImageCropper
 
             return isChecked;
         }
+
+        #region Copy Pasted from ImageViewer programs Helpers.cs
+        private static void CreateShortcut(string shortcutPath, string targetPath, string workingDir, string description, string iconPath)
+        {
+            IWshRuntimeLibrary.WshShell wsh = new IWshRuntimeLibrary.WshShell();
+
+            // Create the shortcut
+            IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)wsh.CreateShortcut(shortcutPath);
+
+            // Set the properties for the shortcut
+            shortcut.TargetPath = targetPath;
+            shortcut.WorkingDirectory = workingDir;
+            if (description != null)
+            {
+                shortcut.Description = description;
+            }
+            if (iconPath != null)
+            {
+                shortcut.IconLocation = iconPath;
+            }
+
+            // Save the shortcut
+            shortcut.Save();
+        }
+        #endregion
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -396,7 +436,7 @@ namespace ImageCropper
                 checkBoxRegistry.Check(false);
 
                 if (Environment.OSVersion.Version.ToString().StartsWith("10"))
-                    MessageBox.Show("Sorry, but this feature does not work in Windows 10. You'd probably be better off using registry startup.");
+                    MessageBox.Show("Sorry, but this feature does not work in Windows 10+. You'd probably be better off using registry startup.");
             }
         }
     }
